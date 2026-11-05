@@ -1,0 +1,33 @@
+title: PowerShell lancé avec une commande encodée
+id: REMPLACE-PAR-UN-UUID
+status: experimental
+description: >
+    Détecte le lancement de PowerShell avec un paramètre de commande encodée
+    en Base64 (-EncodedCommand et ses abréviations), souvent utilisé pour
+    masquer une commande malveillante.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+author: Prénom Nom
+date: 2026-11-06
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+    selection_cli:
+        CommandLine|contains:
+            - ' -e '
+            - ' -ec '
+            - ' -en '
+            - ' -enc'
+            - ' -encodedcommand '
+    condition: all of selection_*
+falsepositives:
+    - Outils d'administration et de déploiement qui encodent leurs commandes (SCCM, Intune)
+level: medium
